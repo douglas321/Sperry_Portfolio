@@ -1,7 +1,7 @@
 ---
-title: "Client Report - [Insert Project Title]"
+title: "Client Report - Project 1"
 subtitle: "Course DS 250"
-author: "[STUDENT NAME]"
+author: "Carter Sperry"
 format:
   html:
     self-contained: true
@@ -22,7 +22,7 @@ format:
         caption: See code
 execute: 
   warning: false
-    
+
 ---
 
 ```{python}
@@ -36,8 +36,7 @@ import plotly.express as px
 
 ## Elevator pitch
 
-_paste your elevator pitch here_
-_A SHORT (4-5 SENTENCES) PARAGRAPH THAT `DESCRIBES KEY INSIGHTS` TAKEN FROM METRICS IN THE PROJECT RESULTS THINK TOP OR MOST IMPORTANT RESULTS._
+_A name can give you a lot of information on a person. With the right data set you can predict the most likely time and location of ones birth. This kind of data can also show how world events can effect the popularity of names, such as major world figures or generational trends._
 
 ```{python}
 #| label: project data
@@ -46,147 +45,158 @@ _A SHORT (4-5 SENTENCES) PARAGRAPH THAT `DESCRIBES KEY INSIGHTS` TAKEN FROM METR
 df = pd.read_csv("https://github.com/byuidatascience/data4names/raw/master/data-raw/names_year/names_year.csv")
 ```
 
-__Highlight the Questions and Tasks__
 
 ## QUESTION|TASK 1
 
-__COPY PASTE QUESTION|TASK 1 FROM THE PROJECT HERE__
+__How does your name at your birth year compare to its use historically__
 
-_type your results and analysis here_
+_The following graph shows that the use of the name Carter has been on a continues rise in popularity since the early 1900s. Prior to this the name was relativly unused. The name peaked in popularity in 2011. So when I was named in 2001 the name was on a major rise in popularity._
 
 ```{python}
 #| label: Q1
 #| code-summary: Read and format data
 # Include and execute your code here
+carter_data = df[df['name'] == 'Carter']
 
-
+# Sum occurrences across all states for each year
+total_occurrences = carter_data.groupby('year').sum(numeric_only=True).reset_index()
 ```
 
-_include figures in chunks and discuss your findings in the figure._
+__
 
 ```{python}
 #| label: Q1 chart
 #| code-summary: plot example
-#| fig-cap: "My useless chart"
 #| fig-align: center
 # Include and execute your code here
-chart = px.bar(df.head(200),
-    x="name", 
-    y="AK"
-)
-chart.show()
+# Filter data for the name "Carter"
+
+
+# Plot the line chart using Plotly Express
+fig = px.line(total_occurrences, x='year', y='Total',
+              labels={'Total': 'Total Occurrences'}, title='Occurrences of Name "Carter" Over Years')
+
+highlighted_point = total_occurrences[total_occurrences['year'] == 2001]
+fig.add_trace(px.scatter(highlighted_point, x='year', y='Total').data[0])
+
+fig.update_traces(marker=dict(size=10, color='red'))
+
+fig.show()
 ```
 
-
-```{python}
-#| label: Q1 table
-#| code-summary: table example
-#| tbl-cap: "Not much of a table"
-#| tbl-cap-location: top
-# Include and execute your code here
-mydat = df.head(1000)\
-    .groupby('year')\
-    .sum()\
-    .reset_index()\
-    .tail(10)\
-    .filter(["year", "AK","AR"])
-
-display(mydat)
-
-```
 
 
 ## QUESTION|TASK 2
 
-__COPY PASTE QUESTION|TASK 2 FROM THE PROJECT HERE__
+__If you talked to someone named Brittany on the phone, what is your guess of his or her age? What ages would you not guess?__
 
-_type your results and analysis here_
+_Based on the data, if you were talk to someone named Brittany it is most likely that they would be between the ages of 20 to 40. The name Brittany began a large rise in popularity in the 80s before peaking in 1990 and regressing at around the same rate. _
 
 ```{python}
 #| label: Q2
 #| code-summary: Read and format data
 # Include and execute your code here
+brittany_data = df[df['name'] == 'Brittany']
 
+# Sum occurrences across all states for each year
+total_occurrences_brittany = brittany_data.groupby('year').sum(numeric_only=True).reset_index()
 
 ```
-
-_include figures in chunks and discuss your findings in the figure._
 
 ```{python}
 #| label: Q2 chart
 #| code-summary: plot example
-#| fig-cap: "My useless chart"
 #| fig-align: center
 # Include and execute your code here
-chart = px.bar(df.head(200),
-    x="name", 
-    y="AK"
-)
-chart.show()
+# Filter data for the name "Brittany"
+
+
+# Plot the line chart using Plotly Express
+fig = px.line(total_occurrences_brittany, x='year', y='Total',
+              labels={'Total': 'Total Occurrences'}, title='Occurrences of Name "Brittany" Over Years')
+fig.show()
 ```
 
-
-```{python}
-#| label: Q2 table
-#| code-summary: table example
-#| tbl-cap: "Not much of a table"
-#| tbl-cap-location: top
-# Include and execute your code here
-mydat = df.head(1000)\
-    .groupby('year')\
-    .sum()\
-    .reset_index()\
-    .tail(10)\
-    .filter(["year", "AK","AR"])
-
-display(mydat)
-
-```
 
 
 ## QUESTION|TASK 3
 
-__COPY PASTE QUESTION|TASK 3 FROM THE PROJECT HERE__
+__Mary, Martha, Peter, and Paul are all Christian names. From 1920 - 2000, compare the name usage of each of the four names. What trends do you notice?__
 
-_type your results and analysis here_
+_Inerestingly, there has been a large decline in popularity of each of these primarily Christan names. It is widly know that christianity has been on a decline in recent years. That fact could be relate to this data although more informatoin would be needed to confirm that theory._
 
 ```{python}
 #| label: Q3
 #| code-summary: Read and format data
 # Include and execute your code here
-
+names_to_include = ['Mary', 'Martha', 'Peter', 'Paul']
+df_filtered = df[df['name'].isin(names_to_include)]
 
 ```
 
-_include figures in chunks and discuss your findings in the figure._
+
 
 ```{python}
 #| label: Q3 chart
 #| code-summary: plot example
-#| fig-cap: "My useless chart"
+
 #| fig-align: center
 # Include and execute your code here
-chart = px.bar(df.head(200),
-    x="name", 
-    y="AK"
-)
-chart.show()
+
+
+
+# Plot the line chart using Plotly Express
+fig = px.line(df_filtered, x='year', y='Total', color='name',
+              labels={'occurrences': 'Occurrences'},
+              title='Name Usage Comparison (1920 - 2000)')
+fig.show()
 ```
+
+## QUESTION|TASK 4
+
+__Think of a unique name from a famous movie. Plot the usage of that name and see how changes line up with the movie release. Does it look like the movie had an effect on usage?__
+
+_In looking at thedata for the name Marty, referenceing Back to the Future, its hard to say if the movie had an effect on the name. The name prior to the year of the movies release was on a consistent decline in usage. However, after the movies release in 1985 the usage flatened out and has stayed relativley consistent from year to year with around 100 - 130 usaes each year._
+
+```{python}
+#| label: Q4
+#| code-summary: Read and format data
+# Include and execute your code here
+# Plot the line chart using Plotly Express
+selected_name = 'Marty'
+start_year = 1980
+end_year = 1990
+
+filtered_data = df[(df['name'] == selected_name) & (df['year'].between(start_year, end_year))]
+
+```
+
 
 
 ```{python}
-#| label: Q3 table
-#| code-summary: table example
-#| tbl-cap: "Not much of a table"
-#| tbl-cap-location: top
+#| label: Q4 chart
+#| code-summary: plot example
+
+#| fig-align: center
 # Include and execute your code here
-mydat = df.head(1000)\
-    .groupby('year')\
-    .sum()\
-    .reset_index()\
-    .tail(10)\
-    .filter(["year", "AK","AR"])
 
-display(mydat)
+# Create a line chart
+fig = px.line(filtered_data, x='year', y='Total',
+              labels={'Total': f'Total Occurrences of {selected_name}'},
+              title=f'Occurrences of Name "{selected_name}" Over Years')
 
+# Add a vertical line at the year of the movie release
+fig.add_shape(
+    dict(
+        type="line",
+        x0=1985,
+        x1=1985,
+        y0=0,
+        y1=filtered_data['Total'].max(),
+        line=dict(color="red", dash="dash"),
+    )
+)
+
+fig.show()
 ```
+
