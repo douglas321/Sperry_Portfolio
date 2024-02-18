@@ -1,7 +1,7 @@
 ---
-title: "Client Report - [Insert Project Title]"
+title: "Client Report - Late flights and Missing Data"
 subtitle: "Course DS 250"
-author: "[STUDENT NAME]"
+author: "Carter Sperry"
 format:
   html:
     self-contained: true
@@ -22,7 +22,6 @@ format:
         caption: See code
 execute: 
   warning: false
-    
 ---
 
 ```{python}
@@ -36,119 +35,95 @@ import plotly.express as px
 
 ## Elevator pitch
 
-_paste your elevator pitch here_
-_A SHORT (4-5 SENTENCES) PARAGRAPH THAT `DESCRIBES KEY INSIGHTS` TAKEN FROM METRICS IN THE PROJECT RESULTS THINK TOP OR MOST IMPORTANT RESULTS._
+_In this analysis, I delve into a comprehensive examination of flight delays. Leveraging SQL techniques, I address data inconsistencies, perform insightful analyses, and generate meaningful visualizations to derive key insights._
 
 ```{python}
 #| label: project data
 #| code-summary: Read and format project data
 # Include and execute your code here
-df = pd.read_csv("https://github.com/byuidatascience/data4names/raw/master/data-raw/names_year/names_year.csv")
+df = pd.read_json("https://raw.githubusercontent.com/byuidatascience/data4missing/master/data-raw/flights_missing/flights_missing.json")
 ```
 
-__Highlight the Questions and Tasks__
+```{python}
+def missing_checks(df, column ):
+    out1 = df[column].isnull().sum(axis = 0)
+    out2 = df[column].describe()
+    out3 = df[column].describe(exclude=np.number)
+    print('\n\n\n')
+    print('Checking column' + column)
+    print('\n')
+    print('Missing summary')
+    print(out1)
+    print('\n')
+    print("Numeric summaries")
+    print(out2)
+    print('\n')
+    print('Non Numeric summaries')
+    print(out3)
+```
+
 
 ## QUESTION|TASK 1
 
-__COPY PASTE QUESTION|TASK 1 FROM THE PROJECT HERE__
-
-_type your results and analysis here_
-
-```{python}
-#| label: Q1
-#| code-summary: Read and format data
-# Include and execute your code here
-
-
-```
-
-_include figures in chunks and discuss your findings in the figure._
-
-```{python}
-#| label: Q1 chart
-#| code-summary: plot example
-#| fig-cap: "My useless chart"
-#| fig-align: center
-# Include and execute your code here
-chart = px.bar(df.head(200),
-    x="name", 
-    y="AK"
-)
-chart.show()
-```
+__Fix all of the varied missing data types in the data to be consistent (all missing values should be displayed as “NaN”). In your report include one record example (one row) from your new data, in the raw JSON format. Your example should display the “NaN” for at least one missing value.__
 
 
 ```{python}
-#| label: Q1 table
-#| code-summary: table example
-#| tbl-cap: "Not much of a table"
-#| tbl-cap-location: top
-# Include and execute your code here
-mydat = df.head(1000)\
-    .groupby('year')\
-    .sum()\
-    .reset_index()\
-    .tail(10)\
-    .filter(["year", "AK","AR"])
-
-display(mydat)
+df_clean = df
 
 ```
+
+```{python}
+df_clean.month.replace(['NaN', 'n/a'], np.nan, inplace = True)
+df_clean.month.replace('Febuary', 'February', inplace = True)
+mean = round(df_clean.minutes_delayed_carrier.mean(), 2)
+df_clean.minutes_delayed_carrier.replace(np.nan, mean, inplace = True)
+df_clean.num_of_delays_late_aircraft.replace(-999, 0, inplace = True)
+df_clean.num_of_delays_carrier.replace("1500+", 1500, inplace= True)
+df_clean.airport_name.replace('', 'NaN', inplace = True)
+
+df_clean.month = df_clean.month.replace('n/a', np.nan)
+df_clean["month"] = df_clean["month"].ffill()
+
+df_clean.iloc[2]
+```
+
 
 
 ## QUESTION|TASK 2
 
-__COPY PASTE QUESTION|TASK 2 FROM THE PROJECT HERE__
+__Which airport has the worst delays? Discuss the metric you chose, and why you chose it to determine the “worst” airport. Your answer should include a summary table that lists (for each airport) the total number of flights, total number of delayed flights, proportion of delayed flights, and average delay time in hours.__
 
-_type your results and analysis here_
+_Looking at the average delay time for the various airports in the database, it can be seen that the Chicago O'Hare International (ORD) and the San Francisco International (SFO) airports generate the longest delayed flights on average._
 
 ```{python}
 #| label: Q2
 #| code-summary: Read and format data
 # Include and execute your code here
 
+df_clean['prop_delayed_flights'] = df_clean['num_of_delays_total'] / df_clean['num_of_flights_total']
 
-```
+df_clean['avg_delay_hour'] = (df_clean['minutes_delayed_total'] / df_clean['num_of_delays_total']) / 60
 
-_include figures in chunks and discuss your findings in the figure._
+worst = df_clean.filter(['airport_code', 'airport_name', 'month', 'year', 'num_of_flights_total', 'num_of_delays_total', 'prop_delayed_flights', 'avg_delay_hour'])
 
-```{python}
-#| label: Q2 chart
-#| code-summary: plot example
-#| fig-cap: "My useless chart"
-#| fig-align: center
-# Include and execute your code here
-chart = px.bar(df.head(200),
-    x="name", 
-    y="AK"
-)
-chart.show()
-```
+worst.head(10)
 
+px.bar(worst, x = 'airport_code', y =  ['num_of_flights_total', 'num_of_delays_total'], barmode = 'group')
 
-```{python}
-#| label: Q2 table
-#| code-summary: table example
-#| tbl-cap: "Not much of a table"
-#| tbl-cap-location: top
-# Include and execute your code here
-mydat = df.head(1000)\
-    .groupby('year')\
-    .sum()\
-    .reset_index()\
-    .tail(10)\
-    .filter(["year", "AK","AR"])
-
-display(mydat)
-
+hour = worst.groupby('airport_code')['avg_delay_hour'].mean()
+fig1 = px.bar(hour)
+fig1.update_xaxes(title = "Airport")
+fig1.update_yaxes(title = "Average Hours Delayed")
+fig1.show()
 ```
 
 
 ## QUESTION|TASK 3
 
-__COPY PASTE QUESTION|TASK 3 FROM THE PROJECT HERE__
+__What is the best month to fly if you want to avoid delays of any length? Discuss the metric you chose and why you chose it to calculate your answer. Include one chart to help support your answer, with the x-axis ordered by month.__
 
-_type your results and analysis here_
+_In order to have the best chance to avoid any flight delays, the best months to travel are September and November. Both months show signifgantly reduced total delays._
 
 ```{python}
 #| label: Q3
@@ -156,37 +131,113 @@ _type your results and analysis here_
 # Include and execute your code here
 
 
-```
+# Assuming 'num_of_delays_total' is the column representing the total number of delays
+fig3 = px.box(df_clean, x='month', y='num_of_delays_total', title="Flight Delays By Month",
+              labels={'num_of_delays_total': 'Delayed Flights', 'month': 'Months'},
+              category_orders={'month': ['January', 'February', 'March', 'April', 'May', 'June',
+                                          'July', 'August', 'September', 'October', 'November', 'December']})
 
-_include figures in chunks and discuss your findings in the figure._
+# Customizing layout
+fig3.update_layout(xaxis_title='Months', yaxis_title='Delayed Flights', showlegend=False)
 
-```{python}
-#| label: Q3 chart
-#| code-summary: plot example
-#| fig-cap: "My useless chart"
-#| fig-align: center
-# Include and execute your code here
-chart = px.bar(df.head(200),
-    x="name", 
-    y="AK"
+# Show the plot
+fig3.show()
+
+import plotly.graph_objects as go
+
+# Group by 'month' and calculate the mean of delayed flights
+monthly_delay_stats = df_clean.groupby('month')['num_of_delays_total'].mean().reset_index()
+
+# Create a table
+table_fig = go.Figure(data=[go.Table(
+    header=dict(values=['Month', 'Average Delayed Flights']),
+    cells=dict(values=[monthly_delay_stats['month'], monthly_delay_stats['num_of_delays_total']],
+               format=[None, ',.2f']))
+])
+
+# Customize layout
+table_fig.update_layout(
+    title='Average Delayed Flights by Month',
+    showlegend=False
 )
-chart.show()
+
+# Show the table
+table_fig.show()
+
 ```
 
 
-```{python}
-#| label: Q3 table
-#| code-summary: table example
-#| tbl-cap: "Not much of a table"
-#| tbl-cap-location: top
-# Include and execute your code here
-mydat = df.head(1000)\
-    .groupby('year')\
-    .sum()\
-    .reset_index()\
-    .tail(10)\
-    .filter(["year", "AK","AR"])
+## QUESTION|TASK 4
 
-display(mydat)
+__According to the BTS website, the “Weather” category only accounts for severe weather delays. Mild weather delays are not counted in the “Weather” category, but are actually included in both the “NAS” and “Late-Arriving Aircraft” categories. Your job is to create a new column that calculates the total number of flights delayed by weather (both severe and mild). Use these three rules for your calculations:__
+
+__A. 100% of delayed flights in the Weather category are due to weather__
+
+__B. 30% of all delayed flights in the Late-Arriving category are due to weather.__
+
+__C. From April to August, 40% of delayed flights in the NAS category are due to weather. The rest of the months, the proportion rises to 65%.__
+
+
+```{python}
+# Assuming df_clean is your original DataFrame
+df_clean['severe'] = df_clean['num_of_delays_weather']  # no missing values for severe weather delays
+
+# Handling missing values for Late-Arriving category
+df_clean['mild_late'] = df_clean['num_of_delays_late_aircraft'].replace(-999, np.nan).fillna(df_clean['num_of_delays_late_aircraft'].mean()) * 0.3
+
+# Calculating mild weather delays for NAS category based on month
+df_clean['mild'] = np.where(
+    df_clean['month'].isin(['April', 'May', 'June', 'July', 'August']),
+    df_clean['num_of_delays_nas'] * 0.4,
+    df_clean['num_of_delays_nas'] * 0.65
+)
+
+# Calculating total weather delays
+df_clean['weather'] = df_clean['num_of_delays_weather'] + df_clean['mild_late'] + df_clean['mild']
+
+# Calculating proportion of weather delays to total delays and total flights
+df_clean['proportion_weather_delay'] = df_clean['weather'] / df_clean['num_of_delays_total']
+df_clean['proportion_weather_total'] = df_clean['weather'] / df_clean['num_of_flights_total']
+
+# Selecting relevant columns
+weather = df_clean[['airport_code', 'month', 'year', 'severe', 'mild', 'mild_late', 'weather', 'proportion_weather_total', 'proportion_weather_delay', 'num_of_flights_total', 'num_of_delays_total']]
+weather.head()
+
+```
+
+## QUESTION|TASK 5
+
+__Using the new weather variable calculated above, create a barplot showing the proportion of all flights that are delayed by weather at each airport. Discuss what you learn from this graph.__
+
+_Looking at this chart it is insightful as to how impactful weather is on flights. Despite our massive leaps in technology we still must wait on nature. An average on about 1/3 of our delayed flights are due to adverse weather conditions_
+
+```{python}
+
+prop_mean = weather.groupby('airport_code')['proportion_weather_delay'].mean()
+
+import plotly.express as px
+
+# Assuming prop_mean is calculated
+fig4 = px.bar(prop_mean.reset_index(), x='airport_code', y='proportion_weather_delay',
+              title="Mean Proportion of Delays Due To Weather For Each Airport",
+              labels={'proportion_weather_delay': 'Mean Proportion of Weather Delays'},
+              color='proportion_weather_delay',  # Color by the proportion for a gradient effect
+              color_continuous_scale='Viridis',  # You can choose other color scales
+              height=500,  # Adjust the height of the chart
+              width=800,   # Adjust the width of the chart
+              text='proportion_weather_delay',  # Display the values on top of the bars
+)
+
+fig4.update_xaxes(title="Airport", showgrid=False)  # Remove x-axis grid lines for a cleaner look
+fig4.update_yaxes(title="Proportion Of Weather Delays", showgrid=False)  # Remove y-axis grid lines
+
+# Add a color bar for reference
+fig4.update_layout(coloraxis_colorbar=dict(title='Proportion', tickvals=[0, 0.5, 1]))
+
+# Adjust the bar text position
+fig4.update_traces(textposition='outside', insidetextanchor='start')
+
+fig4.show()
+
 
 ```

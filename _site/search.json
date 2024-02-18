@@ -99,9 +99,9 @@
   {
     "objectID": "Projects/project1.html",
     "href": "Projects/project1.html",
-    "title": "Client Report - [Insert Project Title]",
+    "title": "Client Report - Project 1",
     "section": "",
-    "text": "paste your elevator pitch here A SHORT (4-5 SENTENCES) PARAGRAPH THAT DESCRIBES KEY INSIGHTS TAKEN FROM METRICS IN THE PROJECT RESULTS THINK TOP OR MOST IMPORTANT RESULTS.\n\n\nRead and format project data\n# Include and execute your code here\ndf = pd.read_csv(\"https://github.com/byuidatascience/data4names/raw/master/data-raw/names_year/names_year.csv\")\n\n\nHighlight the Questions and Tasks",
+    "text": "A name can give you a lot of information on a person. With the right data set you can predict the most likely time and location of ones birth. This kind of data can also show how world events can effect the popularity of names, such as major world figures or generational trends.\n\n\nRead and format project data\n# Include and execute your code here\ndf = pd.read_csv(\"https://github.com/byuidatascience/data4names/raw/master/data-raw/names_year/names_year.csv\")",
     "crumbs": [
       "DS250 Projects",
       "Project 1"
@@ -110,9 +110,9 @@
   {
     "objectID": "Projects/project1.html#elevator-pitch",
     "href": "Projects/project1.html#elevator-pitch",
-    "title": "Client Report - [Insert Project Title]",
+    "title": "Client Report - Project 1",
     "section": "",
-    "text": "paste your elevator pitch here A SHORT (4-5 SENTENCES) PARAGRAPH THAT DESCRIBES KEY INSIGHTS TAKEN FROM METRICS IN THE PROJECT RESULTS THINK TOP OR MOST IMPORTANT RESULTS.\n\n\nRead and format project data\n# Include and execute your code here\ndf = pd.read_csv(\"https://github.com/byuidatascience/data4names/raw/master/data-raw/names_year/names_year.csv\")\n\n\nHighlight the Questions and Tasks",
+    "text": "A name can give you a lot of information on a person. With the right data set you can predict the most likely time and location of ones birth. This kind of data can also show how world events can effect the popularity of names, such as major world figures or generational trends.\n\n\nRead and format project data\n# Include and execute your code here\ndf = pd.read_csv(\"https://github.com/byuidatascience/data4names/raw/master/data-raw/names_year/names_year.csv\")",
     "crumbs": [
       "DS250 Projects",
       "Project 1"
@@ -121,9 +121,9 @@
   {
     "objectID": "Projects/project1.html#questiontask-1",
     "href": "Projects/project1.html#questiontask-1",
-    "title": "Client Report - [Insert Project Title]",
+    "title": "Client Report - Project 1",
     "section": "QUESTION|TASK 1",
-    "text": "QUESTION|TASK 1\nCOPY PASTE QUESTION|TASK 1 FROM THE PROJECT HERE\ntype your results and analysis here\n\n\nRead and format data\n# Include and execute your code here\n\n\ninclude figures in chunks and discuss your findings in the figure.\n::: {#cell-Q1 chart .cell execution_count=4}\n\nplot example\n# Include and execute your code here\nchart = px.bar(df.head(200),\n    x=\"name\", \n    y=\"AK\"\n)\nchart.show()\n\n\n                                                \nMy useless chart\n\n:::\n::: {#cell-Q1 table .cell .tbl-cap-location-top tbl-cap=‘Not much of a table’ execution_count=5}\n\ntable example\n# Include and execute your code here\nmydat = df.head(1000)\\\n    .groupby('year')\\\n    .sum()\\\n    .reset_index()\\\n    .tail(10)\\\n    .filter([\"year\", \"AK\",\"AR\"])\n\ndisplay(mydat)\n\n\n\n\n\n\n\n\n\nyear\nAK\nAR\n\n\n\n\n96\n2006\n21.0\n183.0\n\n\n97\n2007\n28.0\n153.0\n\n\n98\n2008\n36.0\n212.0\n\n\n99\n2009\n34.0\n179.0\n\n\n100\n2010\n22.0\n196.0\n\n\n101\n2011\n41.0\n148.0\n\n\n102\n2012\n28.0\n140.0\n\n\n103\n2013\n26.0\n134.0\n\n\n104\n2014\n20.0\n114.0\n\n\n105\n2015\n28.0\n121.0\n\n\n\n\n\n\n:::",
+    "text": "QUESTION|TASK 1\nHow does your name at your birth year compare to its use historically\nThe following graph shows that the use of the name Carter has been on a continues rise in popularity since the early 1900s. Prior to this the name was relativly unused. The name peaked in popularity in 2011. So when I was named in 2001 the name was on a major rise in popularity.\n\n\nRead and format data\n# Include and execute your code here\ncarter_data = df[df['name'] == 'Carter']\n\n# Sum occurrences across all states for each year\ntotal_occurrences = carter_data.groupby('year').sum(numeric_only=True).reset_index()\n\n\n__\n::: {#cell-Q1 chart .cell execution_count=4}\n\nplot example\n# Include and execute your code here\n# Filter data for the name \"Carter\"\n\n\n# Plot the line chart using Plotly Express\nfig = px.line(total_occurrences, x='year', y='Total',\n              labels={'Total': 'Total Occurrences'}, title='Occurrences of Name \"Carter\" Over Years')\n\nhighlighted_point = total_occurrences[total_occurrences['year'] == 2001]\nfig.add_trace(px.scatter(highlighted_point, x='year', y='Total').data[0])\n\nfig.update_traces(marker=dict(size=10, color='red'))\n\nfig.show()\n\n\n                                                \n\n:::",
     "crumbs": [
       "DS250 Projects",
       "Project 1"
@@ -132,9 +132,9 @@
   {
     "objectID": "Projects/project1.html#questiontask-2",
     "href": "Projects/project1.html#questiontask-2",
-    "title": "Client Report - [Insert Project Title]",
+    "title": "Client Report - Project 1",
     "section": "QUESTION|TASK 2",
-    "text": "QUESTION|TASK 2\nCOPY PASTE QUESTION|TASK 2 FROM THE PROJECT HERE\ntype your results and analysis here\n\n\nRead and format data\n# Include and execute your code here\n\n\ninclude figures in chunks and discuss your findings in the figure.\n::: {#cell-Q2 chart .cell execution_count=7}\n\nplot example\n# Include and execute your code here\nchart = px.bar(df.head(200),\n    x=\"name\", \n    y=\"AK\"\n)\nchart.show()\n\n\n                                                \nMy useless chart\n\n:::\n::: {#cell-Q2 table .cell .tbl-cap-location-top tbl-cap=‘Not much of a table’ execution_count=8}\n\ntable example\n# Include and execute your code here\nmydat = df.head(1000)\\\n    .groupby('year')\\\n    .sum()\\\n    .reset_index()\\\n    .tail(10)\\\n    .filter([\"year\", \"AK\",\"AR\"])\n\ndisplay(mydat)\n\n\n\n\n\n\n\n\n\nyear\nAK\nAR\n\n\n\n\n96\n2006\n21.0\n183.0\n\n\n97\n2007\n28.0\n153.0\n\n\n98\n2008\n36.0\n212.0\n\n\n99\n2009\n34.0\n179.0\n\n\n100\n2010\n22.0\n196.0\n\n\n101\n2011\n41.0\n148.0\n\n\n102\n2012\n28.0\n140.0\n\n\n103\n2013\n26.0\n134.0\n\n\n104\n2014\n20.0\n114.0\n\n\n105\n2015\n28.0\n121.0\n\n\n\n\n\n\n:::",
+    "text": "QUESTION|TASK 2\nIf you talked to someone named Brittany on the phone, what is your guess of his or her age? What ages would you not guess?\nBased on the data, if you were talk to someone named Brittany it is most likely that they would be between the ages of 20 to 40. The name Brittany began a large rise in popularity in the 80s before peaking in 1990 and regressing at around the same rate. \n\n\nRead and format data\n# Include and execute your code here\nbrittany_data = df[df['name'] == 'Brittany']\n\n# Sum occurrences across all states for each year\ntotal_occurrences_brittany = brittany_data.groupby('year').sum(numeric_only=True).reset_index()\n\n\n::: {#cell-Q2 chart .cell execution_count=6}\n\nplot example\n# Include and execute your code here\n# Filter data for the name \"Brittany\"\n\n\n# Plot the line chart using Plotly Express\nfig = px.line(total_occurrences_brittany, x='year', y='Total',\n              labels={'Total': 'Total Occurrences'}, title='Occurrences of Name \"Brittany\" Over Years')\nfig.show()\n\n\n                                                \n\n:::",
     "crumbs": [
       "DS250 Projects",
       "Project 1"
@@ -143,9 +143,20 @@
   {
     "objectID": "Projects/project1.html#questiontask-3",
     "href": "Projects/project1.html#questiontask-3",
-    "title": "Client Report - [Insert Project Title]",
+    "title": "Client Report - Project 1",
     "section": "QUESTION|TASK 3",
-    "text": "QUESTION|TASK 3\nCOPY PASTE QUESTION|TASK 3 FROM THE PROJECT HERE\ntype your results and analysis here\n\n\nRead and format data\n# Include and execute your code here\n\n\ninclude figures in chunks and discuss your findings in the figure.\n::: {#cell-Q3 chart .cell execution_count=10}\n\nplot example\n# Include and execute your code here\nchart = px.bar(df.head(200),\n    x=\"name\", \n    y=\"AK\"\n)\nchart.show()\n\n\n                                                \nMy useless chart\n\n:::\n::: {#cell-Q3 table .cell .tbl-cap-location-top tbl-cap=‘Not much of a table’ execution_count=11}\n\ntable example\n# Include and execute your code here\nmydat = df.head(1000)\\\n    .groupby('year')\\\n    .sum()\\\n    .reset_index()\\\n    .tail(10)\\\n    .filter([\"year\", \"AK\",\"AR\"])\n\ndisplay(mydat)\n\n\n\n\n\n\n\n\n\nyear\nAK\nAR\n\n\n\n\n96\n2006\n21.0\n183.0\n\n\n97\n2007\n28.0\n153.0\n\n\n98\n2008\n36.0\n212.0\n\n\n99\n2009\n34.0\n179.0\n\n\n100\n2010\n22.0\n196.0\n\n\n101\n2011\n41.0\n148.0\n\n\n102\n2012\n28.0\n140.0\n\n\n103\n2013\n26.0\n134.0\n\n\n104\n2014\n20.0\n114.0\n\n\n105\n2015\n28.0\n121.0\n\n\n\n\n\n\n:::",
+    "text": "QUESTION|TASK 3\nMary, Martha, Peter, and Paul are all Christian names. From 1920 - 2000, compare the name usage of each of the four names. What trends do you notice?\nInerestingly, there has been a large decline in popularity of each of these primarily Christan names. It is widly know that christianity has been on a decline in recent years. That fact could be relate to this data although more informatoin would be needed to confirm that theory.\n\n\nRead and format data\n# Include and execute your code here\nnames_to_include = ['Mary', 'Martha', 'Peter', 'Paul']\ndf_filtered = df[df['name'].isin(names_to_include)]\n\n\n::: {#cell-Q3 chart .cell execution_count=8}\n\nplot example\n#| fig-align: center\n# Include and execute your code here\n\n\n\n# Plot the line chart using Plotly Express\nfig = px.line(df_filtered, x='year', y='Total', color='name',\n              labels={'occurrences': 'Occurrences'},\n              title='Name Usage Comparison (1920 - 2000)')\nfig.show()\n\n\n                                                \n\n:::",
+    "crumbs": [
+      "DS250 Projects",
+      "Project 1"
+    ]
+  },
+  {
+    "objectID": "Projects/project1.html#questiontask-4",
+    "href": "Projects/project1.html#questiontask-4",
+    "title": "Client Report - Project 1",
+    "section": "QUESTION|TASK 4",
+    "text": "QUESTION|TASK 4\nThink of a unique name from a famous movie. Plot the usage of that name and see how changes line up with the movie release. Does it look like the movie had an effect on usage?\nIn looking at thedata for the name Marty, referenceing Back to the Future, its hard to say if the movie had an effect on the name. The name prior to the year of the movies release was on a consistent decline in usage. However, after the movies release in 1985 the usage flatened out and has stayed relativley consistent from year to year with around 100 - 130 usaes each year.\n\n\nRead and format data\n# Include and execute your code here\n# Plot the line chart using Plotly Express\nselected_name = 'Marty'\nstart_year = 1980\nend_year = 1990\n\nfiltered_data = df[(df['name'] == selected_name) & (df['year'].between(start_year, end_year))]\n\n\n::: {#cell-Q4 chart .cell execution_count=10}\n\nplot example\n#| fig-align: center\n# Include and execute your code here\n\n# Create a line chart\nfig = px.line(filtered_data, x='year', y='Total',\n              labels={'Total': f'Total Occurrences of {selected_name}'},\n              title=f'Occurrences of Name \"{selected_name}\" Over Years')\n\n# Add a vertical line at the year of the movie release\nfig.add_shape(\n    dict(\n        type=\"line\",\n        x0=1985,\n        x1=1985,\n        y0=0,\n        y1=filtered_data['Total'].max(),\n        line=dict(color=\"red\", dash=\"dash\"),\n    )\n)\n\nfig.show()\n\n\n                                                \n\n:::",
     "crumbs": [
       "DS250 Projects",
       "Project 1"
